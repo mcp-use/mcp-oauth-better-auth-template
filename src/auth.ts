@@ -3,7 +3,7 @@
  *
  * Sets up a Better Auth instance with:
  * - No database (sessionless/stateless mode — sessions stored in signed cookies)
- * - GitHub social login
+ * - Google + GitHub social login (either can be omitted in .env)
  * - OAuth Provider plugin (for MCP OAuth flows)
  * - JWT plugin (required by OAuth Provider for token signing/verification)
  */
@@ -14,16 +14,34 @@ import { oauthProvider } from "@better-auth/oauth-provider";
 
 declare const process: { env: Record<string, string | undefined> };
 
+const socialProviders: Record<
+  string,
+  { clientId: string; clientSecret: string }
+> = {};
+
+if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+  socialProviders.github = {
+    clientId: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+  };
+}
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  socialProviders.google = {
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  };
+}
+
+export const configuredProviders = Object.keys(socialProviders) as Array<
+  "github" | "google"
+>;
+
 export const auth = betterAuth({
   baseURL: "http://localhost:3000",
   basePath: "/api/auth",
   secret: process.env.BETTER_AUTH_SECRET || "dev-secret-change-in-production",
-  socialProviders: {
-    github: {
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    },
-  },
+  socialProviders,
   plugins: [
     jwt(),
     oauthProvider({

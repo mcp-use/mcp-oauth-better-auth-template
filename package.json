@@ -1,22 +1,36 @@
 {
-  "name": "mcp-oauth-better-auth",
+  "name": "mcp-oauth-better-auth-template",
   "type": "module",
   "version": "1.0.0",
   "description": "MCP server template with Better Auth OAuth authentication",
   "license": "MIT",
   "main": "dist/server.js",
   "scripts": {
-    "build": "mcp-use build",
-    "dev": "mcp-use dev",
+    "build": "pnpm build:css && mcp-use build",
+    "build:css": "tailwindcss -i src/styles.css -o public/styles.css --minify",
+    "dev:css": "tailwindcss -i src/styles.css -o public/styles.css --watch",
+    "dev": "pnpm build:css && mcp-use dev",
     "start": "mcp-use start"
   },
   "dependencies": {
     "@better-auth/oauth-provider": "latest",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
     "better-auth": "latest",
-    "mcp-use": "^1.25.0"
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.575.0",
+    "mcp-use": "^1.25.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.2.0",
     "@types/node": "^25.0.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "tailwindcss": "^4.2.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
